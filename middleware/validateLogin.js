@@ -7,20 +7,16 @@ const validateLogin = (request, response, next) => {
   if (!password) {
     return response.status(400)
       .json({ message: 'O campo "password" é obrigatório' });
-  }
-  if (password.length < 6) {
+  } if (password.length < 6) {
     return response.status(400)
       .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  }
-  if (!email) {
+  } if (!email) {
     return response.status(400)
       .json({ message: 'O campo "email" é obrigatório' });
-  }
-  if (!functionRegex.test(email)) {
+  } if (!functionRegex.test(email)) {
     return response.status(400)
       .json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
-  return next();
+  } return next();
 };
 
 module.exports = validateLogin;
