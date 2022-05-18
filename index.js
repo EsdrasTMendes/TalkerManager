@@ -29,7 +29,9 @@ app.get('/talker/:id', async (request, response) => {
     .json(filteredTalkers);
 });
 
-app.post('/login', validateLogin, (_request, response) => response.status(HTTP_OK_STATUS).json({ token: token() }));
+app.post('/login', validateLogin, (_request, response) => {
+  response.status(HTTP_OK_STATUS).json({ token: token() });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
