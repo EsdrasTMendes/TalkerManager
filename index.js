@@ -5,6 +5,8 @@ const validateAge = require('./middleware/validateAge');
 const validateName = require('./middleware/validateName');
 const validateTalk = require('./middleware/validateTalk');
 const validateToken = require('./middleware/validateToken');
+const validateWatchedAt = require('./middleware/validateWatchedAt');
+const validateRate = require('./middleware/validateRate');
 const { token, readFiles, writeFiles } = require('./utils/index');
 
 const app = express();
@@ -43,6 +45,8 @@ app.post(
   validateName,
   validateAge,
   validateTalk,
+  validateWatchedAt,
+  validateRate,
   async (request, response) => {
     const { name, age, talk } = request.body;
     const talkerJson = await readFiles();
