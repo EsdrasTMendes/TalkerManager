@@ -1,8 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const validateLogin = require('./middleware/validateLogin');
-const { token, readFiles } = require('./utils/index');
-const { request } = require('express');
+const validateAge = require('./middleware/validateAge');
+const validateName = require('./middleware/validateName');
+const validateTalk = require('./middleware/validateTalk');
+const validateToken = require('./middleware/validateToken');
+const { token, readFiles, writeFiles } = require('./utils/index');
 
 const app = express();
 app.use(bodyParser.json());
@@ -34,16 +37,26 @@ app.post('/login', validateLogin, (_request, response) => {
   response.status(HTTP_OK_STATUS).json({ token: token() });
 });
 
-app.post('/talker', (request, response) => {
-  const { name, age, talk } = request.body;
-  const personTalk = {
-    id: Math.max(...readFiles.map((talker) => talker.id)) + 1,
-    name,
-    age,
-    talk,
-  };
-  response.status(HTTP_OK_STATUS).json('Olá Kamila');
-});
+app.post(
+  '/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  async (request, response) => {
+    const { name, age, talk } = request.body;
+    const talkerJson = await readFiles();
+    const personTalk = {
+      id: Math.max(...talkerJson.map((talker) => talker.id)) + 1,
+      name,
+      age,
+      talk,
+    };
+    talkerJson.push(personTalk);
+    await writeFiles(talkerJson);
+    response.status(201).json(personTalk);
+  },
+);
 
 app.listen(PORT, () => {
   console.log('Online');

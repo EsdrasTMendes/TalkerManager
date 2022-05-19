@@ -3,7 +3,7 @@ const validateToken = (request, response, next) => {
   if (!authorization) {
     return response.status(401).json({ message: 'Token não encontrado' });
   }
-  if (authorization.length !== 16) {
+  if (authorization.length < 16 || authorization.length > 16) {
     return response.status(401).json({ message: 'Token inválido' });
   }
   return next();
