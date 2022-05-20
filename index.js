@@ -43,10 +43,9 @@ app.post(
   '/talker',
   validateToken,
   validateName,
-  validateAge,
   validateTalk,
+  validateAge,
   validateWatchedAt,
-  validateRate,
   async (request, response) => {
     const { name, age, talk } = request.body;
     const talkerJson = await readFiles();
@@ -61,6 +60,22 @@ app.post(
     response.status(201).json(personTalk);
   },
 );
+
+app.put('/talker/:id',
+validateToken,
+validateName,
+validateTalk,
+validateAge,
+validateWatchedAt,
+async (request, response) => {
+  const { name, age, talk } = request.body;
+  const { id } = request.params;
+  const personsTalkers = await readFiles();
+  const index = personsTalkers.findIndex((person) => person.id === Number(id)); // encontrando indice
+  personsTalkers[index] = { ...personsTalkers[index], name, age, talk }; // reescreveendo no objeto
+  await writeFiles(personsTalkers); // escrevendo no talker.json
+  response.status(200).json(personsTalkers[index]);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
