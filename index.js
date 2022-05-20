@@ -76,6 +76,16 @@ async (request, response) => {
   response.status(200).json(personsTalkers[index]);
 });
 
+app.delete('/talker/:id',
+validateToken,
+async (request, response) => {
+  const { id } = request.params;
+  const personsTalkers = await readFiles();
+  const newPersonsTalkers = personsTalkers.filter((person) => person.id !== Number(id)); 
+  await writeFiles(newPersonsTalkers);
+  response.status(204).json(newPersonsTalkers);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
