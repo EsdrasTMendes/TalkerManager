@@ -23,6 +23,21 @@ app.get('/talker', async (_request, response) => {
   response.status(HTTP_OK_STATUS).send(await readFiles());
 });
 
+app.get('/talker/search', validateToken, async (request, response) => {
+  const { q } = request.query;
+  console.log('NAME:', q);
+  const personsTalkers = await readFiles();
+  const filteredTalkers = personsTalkers.filter((talker) => talker.name.includes(q));
+  console.log(filteredTalkers);
+  if (!q) {
+    return response.status(200).json(personsTalkers);
+  }
+  if (filteredTalkers.length === 0) {
+    return response.status(200).json([]);
+  }
+  return response.status(200).json(filteredTalkers);
+});
+
 app.get('/talker/:id', async (request, response) => {
   const arrayTalkers = await readFiles();
   const { id } = request.params;
