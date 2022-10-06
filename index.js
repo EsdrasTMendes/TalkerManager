@@ -25,10 +25,8 @@ app.get('/talker', async (_request, response) => {
 
 app.get('/talker/search', validateToken, async (request, response) => {
   const { q } = request.query;
-  console.log('NAME:', q);
   const personsTalkers = await readFiles();
   const filteredTalkers = personsTalkers.filter((talker) => talker.name.includes(q));
-  console.log(filteredTalkers);
   if (!q) {
     return response.status(200).json(personsTalkers);
   }
@@ -88,7 +86,7 @@ async (request, response) => {
   const index = personsTalkers.findIndex((person) => person.id === Number(id)); // encontrando indice
   personsTalkers[index] = { ...personsTalkers[index], name, age, talk }; // reescreveendo no objeto
   await writeFiles(personsTalkers); // escrevendo no talker.json
-  response.status(200).json(personsTalkers[index]);
+  response.status().json(personsTalkers[index]);
 });
 
 app.delete('/talker/:id',
